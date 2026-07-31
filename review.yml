@@ -1,0 +1,402 @@
+aid: emirates-skycargo
+name: Emirates SkyCargo
+review:
+  question: Does Emirates SkyCargo publish a callable, documented API surface that the
+    next party in the air cargo chain can integrate against without a bilateral
+    commercial agreement?
+  answer: false
+  date: '2026-07-30'
+  reviewer: API Evangelist
+  tier: air-cargo-carrier
+  cohort: air-cargo-parcel
+  homeCountry: United Arab Emirates
+  primaryDomain: https://www.skycargo.com/
+  domainNote: |
+    The roster hint skycargo.com is correct. https://skycargo.com redirects to
+    https://www.skycargo.com/ (HTTP 200). It is the marketing and product site for
+    the air cargo division of Emirates Airline. The transactional surface lives on a
+    separate host, https://eskycargo.emirates.com/app/offerandorder/ (HTTP 200), which
+    is a login-gated Angular single-page customer portal. https://www.emirates.com/cargo
+    returns 404, so emirates.com is not the cargo entry point.
+
+findings:
+  summary: |
+    Emirates SkyCargo advertises an API but publishes no contract for it. Its own
+    Digital Booking Channels page states, verbatim, that "Emirates SkyCargo offers a
+    direct API connection to your in-house system, providing real-time instant booking
+    confirmation 24/7. Our APIs support comprehensive functionalities including booking
+    creation, amendments, cancellations and track & trace." That sentence is the entire
+    published technical documentation. There is no developer portal, no API reference,
+    no OpenAPI/AsyncAPI/GraphQL artifact, no base URL, no authentication documentation,
+    no rate limits, no changelog, no sandbox and no self-serve signup. The only route
+    in is an email to SkyCargoAPISupport@emirates.com.
+
+    The organization's real integration architecture is a four-lane funnel, all four
+    lanes gated:
+      1. e-SkyCargo portal — a human web application at eskycargo.emirates.com, login
+         required, built on a vendor platform (the app shell references an
+         accelya-favicon.png, indicating an Accelya cargo product rather than an
+         in-house build).
+      2. Direct host-to-host API — bilateral, by email request only.
+      3. CargoWise TMS — integration through a third-party transport management system.
+      4. FFR over EDI — Freight Forwarding Request booking messages exchanged as EDI.
+    Plus four third-party marketplaces (WebCargo, CargoAi, Pelicargo, cargo.one) which
+    the page says are accessible "As an IATA/CASS member".
+
+    The single standard Emirates SkyCargo documents on its own surface is IATA e-AWB.
+    The /my-shipments/e-awb/ page requires agents to sign the IATA Multilateral e-AWB
+    (MeA) Agreement — "Registration under the IATA Multilateral e-AWB (MeA) Agreement is
+    mandatory for all agents submitting FWB and FHL messages, including both IATA and
+    non-IATA agents" — then complete an Emirates SkyCargo e-AWB Configuration Form, send
+    the signed agreement, and wait for an Activation Notice before submitting FWB/FHL
+    "through EDI messaging". No ONE Record reference, no Cargo-XML version, no Cargo-IMP
+    reference and no message-standard version number appears anywhere on the site.
+
+    This is the downstream reading the travel study predicted. IATA authored ONE Record
+    for air cargo and scored 21.5 on its own published surface; Emirates SkyCargo, the
+    largest cargo carrier in the region and a documented e-freight early adopter, carries
+    that forward as zero published machine-readable contract and a mandatory paper-signed
+    IATA agreement as the price of electronic messaging.
+
+interoperability:
+  standardConformance:
+    standard: IATA e-AWB / IATA Multilateral e-AWB Agreement (Resolution 672)
+    version: not published — no resolution number, revision or message-standard version
+      is cited on skycargo.com
+    conformanceClaimed: true
+    conformancePublished: false
+    evidence:
+    - url: https://www.skycargo.com/my-shipments/e-awb/
+      status: 200
+      note: |
+        Documents two e-AWB paths. Path A ("e-AWB through e-SkyCargo"): register, get
+        verified and mapped to a forwarder branch, then submit under My Documentation >
+        Air Waybill. Path B ("e-AWB through FWB/FHL"): Step 1 sign the IATA Multilateral
+        e-AWB (MeA) Agreement (mandatory for IATA and non-IATA agents alike), Step 2 fill
+        out the Emirates SkyCargo e-AWB Configuration Form, Step 3 share the signed MeA
+        agreement by email template, Step 4 "Ready to submit FWB/FHL through EDI
+        messaging". Also describes the IATA e-Freight Programme.
+    messageStandardsNamed:
+    - FWB (Freight Waybill / master air waybill message)
+    - FHL (House Waybill message)
+    - FFR (Freight Forwarding Request booking message)
+    standardsNotFound:
+    - name: IATA ONE Record
+      note: Zero occurrences across skycargo.com pages probed (homepage, Digital Booking
+        Channels, e-AWB). No adoption claim, no pilot claim, no API. Notable given IATA's
+        Cargo Services Conference endorsement of ONE Record as the preferred data-sharing
+        standard effective 1 January 2026.
+    - name: IATA Cargo-XML
+      note: Not named on any Emirates SkyCargo page probed. Third-party trackers assert
+        Emirates SkyCargo status milestones map to IATA Cargo-XML milestone events, but
+        that is inference from outside the organization, not a published claim, and is
+        recorded here as unverified.
+    - name: IATA Cargo-IMP
+      note: Not named. FWB/FHL/FFR are Cargo-IMP-lineage message identifiers, but the
+        site never states which encoding (Cargo-IMP or Cargo-XML) the EDI channel uses.
+    - name: UN/EDIFACT, ANSI X12, GS1 EPCIS, DCSA, UN/CEFACT, WCO Data Model, eFTI, MLETR
+      note: None referenced. DCSA and eBL are ocean-freight frameworks and are not
+        applicable to an air cargo carrier; recorded as not-applicable rather than absent.
+
+  interfaceShape:
+    value: proprietary-undocumented
+    rationale: |
+      The direct host-to-host API is asserted to exist and its capability set is named
+      in prose (booking creation, amendments, cancellations, track and trace), but no
+      contract of any kind is published — no reference, no schema, no base URL, no
+      auth model. Whatever shape it takes is negotiated per counterparty. The EDI lane
+      carries IATA-lineage message types (FWB/FHL/FFR) that other carriers also accept,
+      which is the one genuinely interoperable element, but Emirates SkyCargo publishes
+      neither the encoding nor the version, so a forwarder cannot conform to it from
+      the public record either.
+
+  identifierSchemes:
+    found:
+    - name: Air waybill (AWB) number
+      evidence: The e-AWB pages and the FWB/FHL message flow are AWB-keyed; the site's
+        product taxonomy carries an "awbTrackAndTrace" attribute across product records.
+    - name: IATA airline numeric prefix 176 (Emirates, designator EK)
+      evidence: Third-party AWB-prefix registries and tracking services (cargoenter.com,
+        airwaybilltracker.com, parcelsapp.com) map prefix 176 to Emirates SkyCargo.
+        Recorded as third-party evidence — the prefix is not stated on skycargo.com.
+    - name: IATA/CASS agent code
+      evidence: 'Digital Booking Channels: marketplace access is described "As an
+        IATA/CASS member"; cargo.one''s Emirates partner page states registration uses
+        "your IATA CASS number" to access contract rates and allotments.'
+    - name: Forwarder branch identity mapping
+      evidence: 'e-AWB Step 2: "Emirates SkyCargo will verify your details and map your
+        ID to the appropriate forwarder branch" — a vendor-internal opaque account
+        identifier, not a shared industry key.'
+    - name: IATA airport / station codes
+      evidence: Network, schedules and station pages are organised by airport code, with
+        DXB as hub.
+    notFound:
+    - GS1 GTIN / SSCC / GLN / SGTIN
+    - UN/LOCODE
+    - EORI, HS tariff codes
+    - DUNS, SCAC
+    summary: AWB numbers under IATA airline prefix 176 plus IATA/CASS agent codes and
+      IATA station codes; forwarder identity resolves to an internal branch mapping. No
+      GS1, UN/LOCODE or customs identifiers published.
+
+  eventModel:
+    value: polling-only
+    subscriptionOperationCited: none — no webhook, subscription, callback, notification
+      endpoint, event catalog, AsyncAPI document or status-message (FSU) vocabulary is
+      published anywhere on skycargo.com or eskycargo.emirates.com
+    rationale: |
+      Track and trace is named as a capability of the direct host-to-host API and is
+      offered in the e-SkyCargo portal, both of which are request/response reads. Status
+      is retrieved, never pushed, on the published surface. The EDI lane described on the
+      site is inbound document submission (FWB/FHL) and inbound booking requests (FFR) —
+      the site does not describe any outbound status message stream to the counterparty.
+    publicTracking: false
+    publicTrackingNote: The footer "Track Shipments" link does not resolve to a public
+      tracker; it points at https://eskycargo.emirates.com/app/offerandorder/#/home/find-offer,
+      inside the login-gated portal. /track/ and /tracking/ on skycargo.com both 404.
+
+  ediLegacy:
+    present: true
+    summary: EDI is a documented, first-class integration lane, not a footnote — FWB/FHL
+      e-AWB submission and FFR booking requests both travel over EDI messaging.
+    onboardingRequirements:
+    - Sign the IATA Multilateral e-AWB (MeA) Agreement — mandatory for all agents
+      submitting FWB and FHL, IATA and non-IATA alike
+    - Complete the Emirates SkyCargo e-AWB Configuration Form
+    - Email the signed MeA agreement using Emirates SkyCargo's template
+    - Wait for an Activation Notice before any FWB/FHL may be sent
+    - For FFR booking over EDI, email SkyCargoAPISupport@emirates.com with subject
+      "FFR using EDI (Electronic Data Interchange)"
+    transportNotFound: No VAN, AS2, SFTP, IATA Type B, SITA or ARINC transport detail is
+      published; the encoding (Cargo-IMP vs Cargo-XML) is not stated. A counterparty
+      cannot determine the wire format from the public record.
+
+  multiPartyPosture:
+    summary: Publishes to contracted counterparties only. Emirates SkyCargo integrates
+      with freight forwarders and cargo marketplaces, never with shippers directly, and
+      every lane is negotiated rather than opened.
+    lanes:
+    - lane: e-SkyCargo portal
+      audience: registered forwarders/agents
+      url: https://eskycargo.emirates.com/app/offerandorder/
+      status: 200
+      gate: account registration + verification + branch mapping
+    - lane: Direct host-to-host API
+      audience: forwarders with in-house booking systems
+      gate: email SkyCargoAPISupport@emirates.com, subject "Host to Host Connection Via API"
+    - lane: CargoWise TMS
+      audience: forwarders already on the CargoWise TMS
+      gate: email SkyCargoAPISupport@emirates.com, subject "Transport Management Systems (TMS)"
+    - lane: FFR over EDI
+      audience: forwarders with EDI capability
+      gate: email SkyCargoAPISupport@emirates.com, subject "FFR using EDI (Electronic Data Interchange)"
+    - lane: Third-party marketplaces
+      audience: IATA/CASS member forwarders
+      members:
+      - name: WebCargo
+        url: https://www.webcargo.co/emirates-skycargo/
+        status: 200
+      - name: cargo.one
+        url: https://www.cargo.one/emirates
+        status: 200
+      - name: CargoAi
+        url: https://www.cargoai.co/press/emirates-skycargo-live-worldwide-cargomart/
+      - name: Pelicargo
+        url: https://www.pelicargo.com/
+        status: 200
+      gate: IATA/CASS membership, then the marketplace's own onboarding
+    directionOfPublication: Emirates SkyCargo consumes booking messages from forwarders
+      and returns confirmations; it publishes no open read surface (no public schedules
+      API, no public rate API, no public tracking API) to the wider chain.
+    namedBilateralIntegrations:
+    - DB Schenker — direct host-to-host API connection into DB Schenker's internal
+      booking system (trade press, 2024)
+    - Kuehne+Nagel — host-to-host connection into K+N's internal booking engine (trade
+      press)
+    scaleClaim: Emirates SkyCargo's own media centre states that by December 2025 "almost
+      80% of all shipments on Emirates SkyCargo are booked digitally", driven by
+      eSkyCargo, then third-party marketplaces and "direct customer API integrations" —
+      i.e. a heavily digital carrier whose digital surface is entirely private.
+
+  accessGate:
+    value: commercial-agreement
+    whatADeveloperMustSign: |
+      There is no self-serve path of any kind. To reach the direct API a party must
+      initiate a bilateral integration by email to SkyCargoAPISupport@emirates.com and
+      negotiate a host-to-host connection. To exchange e-AWB messages a party must
+      additionally sign the IATA Multilateral e-AWB (MeA) Agreement, submit the Emirates
+      SkyCargo e-AWB Configuration Form, and receive an Activation Notice. To use the
+      marketplace lane a party must hold IATA/CASS accreditation. Portal registration is
+      manually verified and mapped to a forwarder branch by Emirates SkyCargo staff.
+    selfServeSignup: false
+    sandbox: none published
+    apiKeyIssuance: not published
+    dcsaMembershipVsPublication: not-applicable — DCSA is the ocean container standards
+      body; Emirates SkyCargo is an air cargo carrier. The air-cargo equivalent question
+      (IATA ONE Record membership versus ONE Record publication) resolves as follows —
+      no ONE Record claim and no ONE Record publication found on the organization's own surface.
+
+developerPortal:
+  exists: false
+  url: ''
+  confirmed: false
+  note: No developer portal exists. The nearest published technical page is the Digital
+    Booking Channels marketing page, which describes the API in two sentences and routes
+    to an email address.
+
+probes:
+- url: https://skycargo.com
+  status: 200
+  note: redirects to https://www.skycargo.com/
+- url: https://www.skycargo.com/
+  status: 200
+- url: https://www.emirates.com/cargo
+  status: 404
+- url: https://www.skycargo.com/robots.txt
+  status: 404
+- url: https://www.skycargo.com/sitemap.xml
+  status: 404
+- url: https://www.skycargo.com/sitemap/
+  status: 200
+  note: HTML sitemap page (JS-rendered), not an XML sitemap
+- url: https://www.skycargo.com/.well-known/
+  status: 404
+- url: https://www.skycargo.com/.well-known/security.txt
+  status: 404
+- url: https://www.skycargo.com/openapi.json
+  status: 404
+- url: https://www.skycargo.com/swagger.json
+  status: 404
+- url: https://developer.skycargo.com
+  status: 0
+  note: DNS does not resolve
+- url: https://developers.skycargo.com
+  status: 0
+  note: DNS does not resolve
+- url: https://api.skycargo.com
+  status: 0
+  note: DNS does not resolve
+- url: https://docs.skycargo.com
+  status: 0
+  note: DNS does not resolve
+- url: https://developer.emirates.com
+  status: 0
+  note: DNS does not resolve
+- url: https://developers.emirates.com
+  status: 0
+  note: DNS does not resolve
+- url: https://api.emirates.com
+  status: 400
+  note: Host answers but returns 400 with no documentation, no discovery document and no
+    reference; not a published developer surface
+- url: https://www.skycargo.com/my-shipments/digital-booking-channels/
+  status: 200
+  note: The single page that documents the API's existence and the four integration lanes
+- url: https://www.skycargo.com/my-shipments/e-awb/
+  status: 200
+  note: IATA e-AWB, MeA agreement, FWB/FHL over EDI messaging
+- url: https://www.skycargo.com/my-shipments/
+  status: 200
+- url: https://www.skycargo.com/track/
+  status: 404
+- url: https://www.skycargo.com/tracking/
+  status: 404
+- url: https://www.skycargo.com/api/search/suggest?query=cargo
+  status: 200
+  note: |
+    Undocumented internal site-search JSON endpoint discovered in
+    /static/js/main.js. It returns page titles, descriptions and URLs for the marketing
+    site. It is CMS site search, not a logistics API, is not documented anywhere, carries
+    no versioning or terms, and is deliberately NOT listed in apis.yml as a product API.
+    Recorded here only as evidence that the sole machine-readable surface on the domain
+    is an internal search helper.
+- url: https://eskycargo.emirates.com/
+  status: 404
+- url: https://eskycargo.emirates.com/app/offerandorder/
+  status: 200
+  note: Angular SPA shell, title "CustomerApp", login required. Favicon asset path is
+    assets/images/ek/accelya-favicon.png, indicating the portal runs on an Accelya cargo
+    platform rather than an Emirates-built API surface.
+- url: https://eskycargo.emirates.com/openapi.json
+  status: 404
+- url: https://eskycargo.emirates.com/swagger.json
+  status: 404
+- url: https://eskycargo.emirates.com/.well-known/security.txt
+  status: 404
+- url: https://www.skycargo.com/media/zzvbe3mr/e-skycargo-booking-guide-2025.pdf
+  status: 200
+  note: Human user guide for the portal; not an API contract
+- url: https://www.skycargo.com/media/gakn5ne1/user-guide-for-schedule-address-book-templates-and-customer-relations.pdf
+  status: 200
+  note: Human user guide for the portal; not an API contract
+- url: https://www.webcargo.co/emirates-skycargo/
+  status: 200
+- url: https://www.cargo.one/emirates
+  status: 200
+- url: https://www.pelicargo.com/
+  status: 200
+- url: https://www.linkedin.com/company/emirates-skycargo
+  status: 999
+  note: LinkedIn anti-bot response; profile exists and is linked from skycargo.com footer
+
+artifacts:
+  openapi: []
+  asyncapi: []
+  graphql: []
+  postman: []
+  harvested: false
+  count: 0
+  note: Nothing machine-readable was found to harvest. No openapi/ directory was created
+    because no real specification exists to put in it.
+
+githubOrganization:
+  found: false
+  note: A GitHub code search for "skycargo" / "emirates skycargo" returns only unrelated
+    third-party student and hobby projects. No official Emirates or Emirates SkyCargo
+    organization publishing cargo API artifacts was found.
+
+sources:
+- url: https://www.skycargo.com/my-shipments/digital-booking-channels/
+  type: Documentation
+  note: Primary evidence. Names the direct API connection and its capabilities, the
+    CargoWise TMS lane, the FFR-over-EDI lane, and the WebCargo/CargoAi/Pelicargo/cargo.one
+    marketplace lane gated on IATA/CASS membership. All three technical lanes route to
+    mailto:SkyCargoAPISupport@emirates.com.
+- url: https://www.skycargo.com/my-shipments/e-awb/
+  type: Documentation
+  note: Primary evidence for standard conformance. IATA e-Freight Programme, IATA
+    Multilateral e-AWB (MeA) Agreement mandatory, e-AWB Configuration Form, Activation
+    Notice, FWB/FHL over EDI messaging.
+- url: https://www.skycargo.com/media-centre/emirates-skycargo-charts-flightpath-into-2026--following-a-milestone-year/
+  type: Blog
+  note: 'First-party claim: "almost 80% of all shipments on Emirates SkyCargo are booked
+    digitally", driven by eSkyCargo, then third-party marketplaces and direct customer
+    API integrations.'
+- url: https://eskycargo.emirates.com/app/offerandorder/
+  type: Portal
+  note: The transactional customer surface. Login-gated SPA on a vendor cargo platform.
+- url: https://www.cargo.one/partners/ek
+  type: Reference
+  note: Third-party marketplace listing. Confirms registration keyed on IATA CASS number
+    for contract rates and allotments; no API access exposed to the forwarder.
+- url: https://www.aircargonews.net/db-schenker-continues-to-expand-airline-api-connections/1069920.article
+  type: Reference
+  note: Trade press on the DB Schenker host-to-host API connection — bilateral, not open.
+
+actions:
+  apisYmlCreated: true
+  apisListed: 1
+  apisListedNote: One entry, the advertised host-to-host API, listed because Emirates
+    SkyCargo publicly asserts its existence and names its capabilities on its own site.
+    No baseURL is claimed because none is published. No specification is claimed because
+    none exists.
+  openapiHarvested: false
+  status: built-stub
+  reason: |
+    Identity and integration posture were captured in full from first-party sources, but
+    no public developer surface and no machine-readable contract exist to build on. The
+    finding is the point: a top-tier global air cargo carrier that books ~80% digitally,
+    that was an early IATA e-freight adopter, and that runs live API connections with DB
+    Schenker, Kuehne+Nagel and four marketplaces, publishes exactly zero callable contract
+    and requires a signed IATA agreement plus an email negotiation before any counterparty
+    can exchange a single message.

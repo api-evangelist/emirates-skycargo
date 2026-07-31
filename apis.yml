@@ -1,0 +1,92 @@
+aid: emirates-skycargo
+url: https://raw.githubusercontent.com/api-evangelist/emirates-skycargo/refs/heads/main/apis.yml
+name: Emirates SkyCargo
+kind: company
+description: >-
+  Emirates SkyCargo is the air cargo division of Emirates Airline, headquartered
+  at Dubai International Airport in the United Arab Emirates, moving general freight,
+  pharmaceuticals, perishables, live animals, valuables, mail and courier traffic across
+  a network of more than 140 destinations on six continents using both freighters and
+  passenger-aircraft bellyhold capacity. In the shipment chain it is the airborne carrier
+  leg sitting between the freight forwarder and the ground handler, and it books almost
+  exclusively through intermediaries rather than shippers directly. Its API posture is
+  advertised but not published: Emirates SkyCargo states on its own Digital Booking
+  Channels page that it offers "a direct API connection to your in-house system" covering
+  booking creation, amendments, cancellations and track and trace, yet there is no
+  developer portal, no API reference, no OpenAPI or AsyncAPI document, no base URL and
+  no self-serve signup anywhere on skycargo.com. Access is obtained only by emailing
+  SkyCargoAPISupport@emirates.com to negotiate a host-to-host connection, by integrating
+  through the CargoWise transport management system, by submitting Freight Forwarding
+  Requests over EDI, or by booking through the WebCargo, CargoAi, Pelicargo and cargo.one
+  marketplaces, which themselves require IATA/CASS accreditation. The one standard the
+  organization documents on its own surface is IATA e-AWB: agents must sign the IATA
+  Multilateral e-AWB Agreement before submitting FWB and FHL cargo messages over EDI
+  messaging. This is an EDI-and-bilateral-integration carrier with a customer-contract
+  portal veneer, not a public API provider.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/emirates-skycargo.png
+tags:
+- Logistics
+- Supply Chain
+- United Arab Emirates
+- Air Cargo
+- Airline
+- Freight
+- Track and Trace
+- EDI
+- e-AWB
+- Standards
+created: '2026-07-30'
+modified: '2026-07-30'
+specificationVersion: '0.19'
+apis:
+- aid: emirates-skycargo:emirates-skycargo-host-to-host-api
+  name: Emirates SkyCargo Host-to-Host API
+  description: >-
+    A direct system-to-system API that Emirates SkyCargo advertises on its
+    own Digital Booking Channels page, described as connecting a freight forwarder's
+    in-house system for real-time instant booking confirmation 24/7, with booking
+    creation, amendments, cancellations and track and trace. No technical contract is
+    published — there is no developer portal, no API reference, no machine-readable
+    specification, no documented base URL, no authentication documentation and no
+    self-serve onboarding. The only published route to access is an email to
+    SkyCargoAPISupport@emirates.com with the subject "Host to Host Connection Via API",
+    which starts a commercial integration project. Listed here because the organization
+    publicly asserts the API exists and names its capabilities, not because a callable
+    contract was found.
+  humanURL: https://www.skycargo.com/my-shipments/digital-booking-channels/
+  tags:
+  - Air Cargo
+  - Booking
+  - Track and Trace
+  - Logistics
+  properties:
+  - type: Documentation
+    url: https://www.skycargo.com/my-shipments/digital-booking-channels/
+  - type: Contact
+    url: mailto:SkyCargoAPISupport@emirates.com?subject=Host%20to%20Host%20Connection%20Via%20API
+common:
+- type: Website
+  url: https://www.skycargo.com/
+- type: Portal
+  url: https://eskycargo.emirates.com/app/offerandorder/
+- type: Documentation
+  url: https://www.skycargo.com/my-shipments/digital-booking-channels/
+- type: Documentation
+  url: https://www.skycargo.com/my-shipments/e-awb/
+- type: Support
+  url: https://www.skycargo.com/contact-support/
+- type: FAQ
+  url: https://www.skycargo.com/contact-support/frequently-asked-question-faqs/
+- type: Training
+  url: https://www.skycargo.com/contact-support/e-skycargo-training/
+- type: TermsOfService
+  url: https://www.skycargo.com/website-user-agreement/
+- type: PrivacyPolicy
+  url: https://www.skycargo.com/privacy/
+- type: Blog
+  url: https://www.skycargo.com/media-centre
+- type: LinkedIn
+  url: https://www.linkedin.com/company/emirates-skycargo
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
