@@ -46,6 +46,7 @@ tags:
 - EDI
 - e-AWB
 - Standards
+- Aviation
 tags_raw:
 - Logistics
 - Supply Chain
@@ -57,6 +58,7 @@ tags_raw:
 - EDI
 - e-AWB
 - Standards
+- Aviation
 created: '2026-07-30'
 modified: '2026-07-30'
 specificationVersion: '0.23'
