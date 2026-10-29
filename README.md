@@ -1,4 +1,4 @@
-# Emirates SkyCargo (emirates-skycargo)
+# Emirates SkyCargo
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,75 +66,76 @@
 
 Emirates SkyCargo is the air cargo division of Emirates Airline, headquartered at Dubai International Airport in the United Arab Emirates, moving general freight, pharmaceuticals, perishables, live animals, valuables, mail and courier traffic across a network of more than 140 destinations on six continents using both freighters and passenger-aircraft bellyhold capacity. In the shipment chain it is the airborne carrier leg sitting between the freight forwarder and the ground handler, and it books almost exclusively through intermediaries rather than shippers directly. Its API posture is advertised but not published: Emirates SkyCargo states on its own Digital Booking Channels page that it offers "a direct API connection to your in-house system" covering booking creation, amendments, cancellations and track and trace, yet there is no developer portal, no API reference, no OpenAPI or AsyncAPI document, no base URL and no self-serve signup anywhere on skycargo.com. Access is obtained only by emailing SkyCargoAPISupport@emirates.com to negotiate a host-to-host connection, by integrating through the CargoWise transport management system, by submitting Freight Forwarding Requests over EDI, or by booking through the WebCargo, CargoAi, Pelicargo and cargo.one marketplaces, which themselves require IATA/CASS accreditation. The one standard the organization documents on its own surface is IATA e-AWB: agents must sign the IATA Multilateral e-AWB Agreement before submitting FWB and FHL cargo messages over EDI messaging. This is an EDI-and-bilateral-integration carrier with a customer-contract portal veneer, not a public API provider.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/emirates-skycargo/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/emirates-skycargo/refs/heads/main/apis.yml)
+**Areas:** Logistics · Supply Chain · United Arab Emirates · Air Cargo · Airlines · Freight · Track and Trace · EDI · e-AWB · Standards · Aviation
 
-## Tags
+## Emirates SkyCargo on APIs.io
 
-- Logistics
-- Supply Chain
-- United Arab Emirates
-- Air Cargo
-- Airline
-- Freight
-- Track and Trace
-- EDI
-- e-AWB
-- Standards
+Everything profiled for Emirates SkyCargo is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/emirates-skycargo/](https://apis.io/providers/emirates-skycargo/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (1)
 
-- **Created:** 2026-07-30
-- **Modified:** 2026-07-30
+- [Emirates SkyCargo Host-to-Host API](https://apis.io/apis/emirates-skycargo/emirates-skycargo-host-to-host-api/) — A direct system-to-system API that Emirates SkyCargo advertises on its own Digital Booking Channels page, described as connecting a freight forwarder's…
 
-## APIs
+## Where to find this API
 
-### Emirates SkyCargo Host-to-Host API
-
-A direct system-to-system API that Emirates SkyCargo advertises on its own Digital Booking Channels page, described as connecting a freight forwarder's in-house system for real-time instant booking confirmation 24/7, with booking creation, amendments, cancellations and track and trace. No technical contract is published — there is no developer portal, no API reference, no machine-readable specification, no documented base URL, no authentication documentation and no self-serve onboarding. The only published route to access is an email to SkyCargoAPISupport@emirates.com with the subject "Host to Host Connection Via API", which starts a commercial integration project. Listed here because the organization publicly asserts the API exists and names its capabilities, not because a callable contract was found.
-
-- **Human URL:** [https://www.skycargo.com/my-shipments/digital-booking-channels/](https://www.skycargo.com/my-shipments/digital-booking-channels/)
-- **Base URL:** none published
-
-#### Tags
-
-- Air Cargo
-- Booking
-- Track and Trace
-- Logistics
-
-#### Properties
-
-- [Documentation](https://www.skycargo.com/my-shipments/digital-booking-channels/)
-- [Contact](mailto:SkyCargoAPISupport@emirates.com?subject=Host%20to%20Host%20Connection%20Via%20API)
-
-## Interoperability
-
-A shipment crosses many parties. What this organization publishes, and whether the next party in the chain can speak it:
-
-| Dimension | Finding |
-| --- | --- |
-| Standard conformance | IATA e-AWB — the IATA Multilateral e-AWB (MeA) Agreement is mandatory before FWB/FHL messages may be sent. No version cited. No ONE Record, Cargo-XML or Cargo-IMP reference on any first-party page. |
-| Interface shape | `proprietary-undocumented` |
-| Identifier scheme | AWB numbers under IATA airline prefix 176, IATA/CASS agent codes, IATA station codes (DXB hub), plus an internal forwarder-branch mapping. No GS1, UN/LOCODE or customs identifiers. |
-| Event model | `polling-only` — track and trace is a read capability of the direct API and the portal. No webhook, subscription, AsyncAPI or status-message vocabulary is published. |
-| EDI legacy | First-class. FWB/FHL e-AWB and FFR booking requests both travel over EDI messaging. Onboarding requires a signed IATA MeA Agreement, an e-AWB Configuration Form and an Activation Notice. No VAN/AS2/transport or encoding detail published. |
-| Multi-party posture | Publishes to contracted counterparties only — forwarders and marketplaces, never shippers directly. Four gated lanes plus four IATA/CASS-gated marketplaces. |
-| Access gate | `commercial-agreement` |
-
-## Common Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.skycargo.com/)
-- [Portal](https://eskycargo.emirates.com/app/offerandorder/)
-- [Documentation — Digital Booking Channels](https://www.skycargo.com/my-shipments/digital-booking-channels/)
-- [Documentation — e-AWB](https://www.skycargo.com/my-shipments/e-awb/)
+- [Documentation](https://www.skycargo.com/my-shipments/digital-booking-channels/)
 - [Support](https://www.skycargo.com/contact-support/)
-- [FAQ](https://www.skycargo.com/contact-support/frequently-asked-question-faqs/)
-- [Training](https://www.skycargo.com/contact-support/e-skycargo-training/)
-- [Terms of Service](https://www.skycargo.com/website-user-agreement/)
-- [Privacy Policy](https://www.skycargo.com/privacy/)
 - [Blog](https://www.skycargo.com/media-centre)
-- [LinkedIn](https://www.linkedin.com/company/emirates-skycargo)
+- [Terms of service](https://www.skycargo.com/website-user-agreement/)
+- [Privacy policy](https://www.skycargo.com/privacy/)
 
-## Maintainers
+## API Evangelist rating
 
-- **Kin Lane** — kin@apievangelist.com
+**Kin Score 14.1** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 57.1 |
+| Contract quality | 0.0 |
+| Contract governance | 0.0 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 26.2 |
+| Access clarity | 21.1 |
+
+**Agent readiness 0.0** — human-only
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | — |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 7.8** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/emirates-skycargo/](https://apis.io/providers/emirates-skycargo/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Emirates SkyCargo: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/emirates-skycargo/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
